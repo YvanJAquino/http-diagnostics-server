@@ -1,0 +1,14 @@
+steps:
+- id: docker-build-push-diagnostics-server
+  waitFor: ['-']
+  name: gcr.io/cloud-builders/docker
+  dir: service
+  entrypoint: bash
+  args:
+    - -c
+    - |
+      docker build -t gcr.io/$PROJECT_ID/${_SERVICE} . &&
+      docker push gcr.io/$PROJECT_ID/${_SERVICE}
+
+substitutions:
+  _SERVICE: http-diagnostics-server
