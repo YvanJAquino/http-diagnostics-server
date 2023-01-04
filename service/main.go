@@ -24,7 +24,8 @@ func main() {
 	ctx := context.Background()
 	v, err := idtoken.NewValidator(ctx)
 	if err != nil {
-		lg.Fatal(err)
+		log.Println("error during Validator instantiation")
+		log.Fatal(err)
 	}
 	requestAuditor := func(w http.ResponseWriter, r *http.Request) {
 		audited := new(Request)
@@ -34,6 +35,7 @@ func main() {
 			idToken := extractToken(authHeader)
 			p, err := v.Validate(ctx, idToken, "")
 			if err != nil {
+				log.Println("error during Validation")
 				log.Fatal(err)
 			}
 			auth := &AuthPayload{
@@ -60,9 +62,9 @@ func main() {
 		audited.Cookies = r.Cookies()
 
 		enc := json.NewEncoder(lg.Writer())
-		enc.SetIndent("", "\t")
 		err := enc.Encode(audited)
 		if err != nil {
+			log.Println("error during json.Encode")
 			log.Fatal(err)
 		}
 		w.WriteHeader(http.StatusOK)
